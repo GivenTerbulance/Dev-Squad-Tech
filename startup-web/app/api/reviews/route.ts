@@ -34,8 +34,10 @@ export async function GET(request: NextRequest) {
         const { searchParams } = new URL(request.url);
         const page = parseInt(searchParams.get("page") || "1");
         const limit = parseInt(searchParams.get("limit") || "10");
+        const search = searchParams.get("search") || undefined;
+        const rating = searchParams.get("rating") ? parseInt(searchParams.get("rating")!) : undefined;
 
-        const { items, total } = await ReviewService.getAll(page, limit);
+        const { items, total } = await ReviewService.getAll(page, limit, search, rating);
         return ApiUtils.success(items, 200, { page, limit, total });
     } catch (error: any) {
         return ApiUtils.handleError(error);

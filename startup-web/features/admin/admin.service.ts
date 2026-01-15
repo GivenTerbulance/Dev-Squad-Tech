@@ -21,10 +21,20 @@ export const AdminService = {
         };
     },
 
-    async getUsers(page = 1, limit = 10) {
+    async getUsers(page = 1, limit = 10, search?: string) {
         const skip = (page - 1) * limit;
+
+        const where: any = {};
+        if (search) {
+            where.OR = [
+                { name: { contains: search, mode: 'insensitive' } },
+                { email: { contains: search, mode: 'insensitive' } },
+            ];
+        }
+
         const [items, total] = await Promise.all([
             db.user.findMany({
+                where,
                 skip,
                 take: limit,
                 orderBy: { createdAt: "desc" },
@@ -42,7 +52,7 @@ export const AdminService = {
                     },
                 },
             }),
-            db.user.count(),
+            db.user.count({ where }),
         ]);
 
         return { items, total };

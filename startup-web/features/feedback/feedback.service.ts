@@ -12,16 +12,34 @@ export const FeedbackService = {
         });
     },
 
-    async getAll(page = 1, limit = 10) {
+    async getAll(page = 1, limit = 10, search?: string) {
         const skip = (page - 1) * limit;
+
+        const where: any = {};
+        if (search) {
+            where.OR = [
+                { title: { contains: search, mode: 'insensitive' } },
+                { content: { contains: search, mode: 'insensitive' } },
+            ];
+        }
+
         const [items, total] = await Promise.all([
             db.feedback.findMany({
+                where,
                 skip,
                 take: limit,
                 orderBy: { createdAt: "desc" },
-                include: { user: { select: { name: true, email: true } } },
+                include: {
+                    user: {
+                        select: {
+                            id: true,
+                            name: true,
+                            image: true,
+                        },
+                    },
+                },
             }),
-            db.feedback.count(),
+            db.feedback.count({ where }),
         ]);
 
         return { items, total };

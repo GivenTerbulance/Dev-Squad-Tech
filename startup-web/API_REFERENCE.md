@@ -67,7 +67,11 @@ Update profile details.
 
 ### GET `/api/reviews`
 Fetch a paginated list of all reviews.
-- **Query Params**: `page` (default 1), `limit` (default 10)
+- **Query Params**: 
+  - `page` (default 1)
+  - `limit` (default 10)
+  - `search` (filter by comment text)
+  - `rating` (filter by star rating, e.g., `5`)
 
 ### POST `/api/reviews` [Auth Required]
 Submit a new review.
@@ -81,7 +85,10 @@ Submit a new review.
 
 ### GET `/api/feedback`
 Fetch a paginated list of feedback.
-- **Query Params**: `page`, `limit`
+- **Query Params**: 
+  - `page`
+  - `limit`
+  - `search` (filter by title or content)
 
 ### POST `/api/feedback` [Auth Required]
 Submit feedback.

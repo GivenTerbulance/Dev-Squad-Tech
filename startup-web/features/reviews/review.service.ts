@@ -12,16 +12,35 @@ export const ReviewService = {
         });
     },
 
-    async getAll(page = 1, limit = 10) {
+    async getAll(page = 1, limit = 10, search?: string, rating?: number) {
         const skip = (page - 1) * limit;
+
+        const where: any = {};
+        if (rating) where.rating = rating;
+        if (search) {
+            where.comment = {
+                contains: search,
+                mode: 'insensitive',
+            };
+        }
+
         const [items, total] = await Promise.all([
             db.review.findMany({
+                where,
                 skip,
                 take: limit,
                 orderBy: { createdAt: "desc" },
-                include: { user: { select: { name: true, image: true } } },
+                include: {
+                    user: {
+                        select: {
+                            id: true,
+                            name: true,
+                            image: true,
+                        },
+                    },
+                },
             }),
-            db.review.count(),
+            db.review.count({ where }),
         ]);
 
         return { items, total };

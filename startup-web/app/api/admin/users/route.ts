@@ -12,8 +12,9 @@ export async function GET(request: NextRequest) {
         const { searchParams } = new URL(request.url);
         const page = parseInt(searchParams.get("page") || "1");
         const limit = parseInt(searchParams.get("limit") || "10");
+        const search = searchParams.get("search") || undefined;
 
-        const { items, total } = await AdminService.getUsers(page, limit);
+        const { items, total } = await AdminService.getUsers(page, limit, search);
         return ApiUtils.success(items, 200, { page, limit, total });
     } catch (error: any) {
         return ApiUtils.handleError(error);
