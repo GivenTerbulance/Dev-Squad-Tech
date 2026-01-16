@@ -6,6 +6,7 @@ import {
 } from "./auth.types";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { EmailService } from "@/features/email/email.service";
 
 // Use a secure secret in production!
 const JWT_SECRET = process.env.JWT_SECRET || "fallback-secret-for-dev-only";
@@ -32,6 +33,10 @@ export const AuthService = {
                 role: "USER",
             },
         });
+
+        // Send welcome email
+        // We don't await this to avoid blocking the registration flow
+        EmailService.sendWelcomeEmail(user.email, user.name || "User").catch(console.error);
 
         const token = jwt.sign(
             { userId: user.id, email: user.email, role: user.role },
