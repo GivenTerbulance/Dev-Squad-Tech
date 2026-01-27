@@ -9,8 +9,9 @@ const UpdateRoleSchema = z.object({
 
 export async function PATCH(
     request: Request,
-    { params }: { params: { id: string } }
+    props: { params: Promise<{ id: string }> }
 ) {
+    const params = await props.params;
     try {
         if (!(await isAdmin())) return ApiUtils.forbidden();
 
@@ -30,8 +31,9 @@ export async function PATCH(
 
 export async function DELETE(
     _request: Request,
-    { params }: { params: { id: string } }
+    props: { params: Promise<{ id: string }> }
 ) {
+    const params = await props.params;
     try {
         if (!(await isAdmin())) return ApiUtils.forbidden();
 

@@ -8,12 +8,14 @@ export async function POST(request: Request) {
         const validation = RegisterSchema.safeParse(body);
 
         if (!validation.success) {
+            console.error("Registration validation failed:", validation.error.format());
             return ApiUtils.handleError(validation.error);
         }
 
         const result = await AuthService.register(validation.data);
         return ApiUtils.success(result, 201);
     } catch (error: any) {
+        console.error("Registration error:", error);
         return ApiUtils.handleError(error);
     }
 }

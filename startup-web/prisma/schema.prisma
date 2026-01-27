@@ -14,6 +14,12 @@ enum UserRole {
   ADMIN
 }
 
+enum InvoiceStatus {
+  PENDING
+  PAID
+  FAILED
+}
+
 model User {
   id            String    @id @default(uuid())
   name          String?
@@ -23,6 +29,7 @@ model User {
   role          UserRole  @default(USER)
   reviews       Review[]
   feedback      Feedback[]
+  invoices      Invoice[]
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 }
@@ -45,4 +52,16 @@ model Feedback {
   user      User     @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Invoice {
+  id              String        @id @default(uuid())
+  amount          Float
+  currency        String        @default("zar")
+  status          InvoiceStatus @default(PENDING)
+  stripeSessionId String?
+  userId          String
+  user            User          @relation(fields: [userId], references: [id])
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
 }

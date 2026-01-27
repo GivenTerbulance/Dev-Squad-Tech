@@ -59,8 +59,8 @@ export const ApiUtils = {
             return this.badRequest("Validation failed", err.format());
         }
 
-        if (err.message === "Unauthorized") {
-            return this.unauthorized();
+        if (err.message === "Unauthorized" || err.message === "Invalid credentials") {
+            return this.unauthorized(err.message);
         }
 
         if (err.message === "Forbidden") {

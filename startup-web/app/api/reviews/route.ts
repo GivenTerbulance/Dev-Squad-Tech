@@ -32,6 +32,17 @@ export async function POST(request: Request) {
 export async function GET(request: NextRequest) {
     try {
         const { searchParams } = new URL(request.url);
+        const mine = searchParams.get("mine") === "true";
+
+        if (mine) {
+            const user = await getAuthUser();
+            if (!user) {
+                return ApiUtils.unauthorized();
+            }
+            const reviews = await ReviewService.getByUserId(user.id);
+            return ApiUtils.success(reviews);
+        }
+
         const page = parseInt(searchParams.get("page") || "1");
         const limit = parseInt(searchParams.get("limit") || "10");
         const search = searchParams.get("search") || undefined;

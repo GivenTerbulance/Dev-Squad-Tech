@@ -5,3 +5,19 @@ node_modules
 dist
 build
 .DS_Store
+
+# Testing
+coverage/
+test_output.txt
+test-prisma.js
+verify-db.js
+
+# Environments
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE
+.vscode/
+.idea/
